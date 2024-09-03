@@ -91,6 +91,7 @@ type MarkdownFile struct {
 	Sections    []Section
 }
 
+// New creates a new MarkdownFile object
 func New(path string) MarkdownFile {
 	return MarkdownFile{Path: path}
 }

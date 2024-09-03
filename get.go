@@ -4,6 +4,7 @@ import (
 	"github.com/lithammer/fuzzysearch/fuzzy"
 )
 
+// Returns the value of the specified front matter key or the default value if the key does not exist
 func (md MarkdownFile) GetFrontMatter(key string, defaultValue interface{}) (value interface{}) {
 	if md.FrontMatter == nil {
 		return defaultValue

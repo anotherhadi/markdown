@@ -43,6 +43,7 @@ func (md *MarkdownFile) readFrontMatter(filename string) (err error) {
 	return
 }
 
+// Read reads the markdown file and parses it into sections (also reads the Front Matter)
 func (md *MarkdownFile) Read() (err error) {
 	directory := filepath.Dir(md.Path)
 	filename := filepath.Base(md.Path)
