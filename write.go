@@ -4,6 +4,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 func (md *MarkdownFile) AddSection(line string) {
@@ -57,12 +59,14 @@ func (md *MarkdownFile) Write(str ...string) (err error) {
 
 	// Write the file
 
-	if len(md.frontMatterData) > 0 {
-		for _, line := range md.frontMatterData {
-			_, err = file.WriteString(line + "\n")
-			if err != nil {
-				return err
-			}
+	if md.FrontMatter != nil {
+		d, err := yaml.Marshal(md.FrontMatter)
+		if err != nil {
+			return err
+		}
+		_, err = file.WriteString("---\n" + string(d) + "---\n\n")
+		if err != nil {
+			return err
 		}
 	}
 

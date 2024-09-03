@@ -85,11 +85,10 @@ type Section struct {
 }
 
 type MarkdownFile struct {
-	Path            string
-	Title           string // First "H1" section
-	FrontMatter     map[interface{}]interface{}
-	frontMatterData []string // The original front matter data
-	Sections        []Section
+	Path        string
+	Title       string // First "H1" section
+	FrontMatter map[interface{}]interface{}
+	Sections    []Section
 }
 
 func New(path string) MarkdownFile {

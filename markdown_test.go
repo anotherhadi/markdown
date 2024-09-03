@@ -101,7 +101,6 @@ func TestReadAndWrite(t *testing.T) {
 		"./testfiles/empty.md",
 		"./testfiles/lorem.md",
 		"./testfiles/empty_section.md",
-		"./testfiles/metadata.md",
 		"./testfiles/start_with_no_section.md",
 		"./testfiles/hyprland.md",
 	}
@@ -162,6 +161,11 @@ func TestAddSectionAtIndex(t *testing.T) {
 	err = md.Write(filename + ".tmp")
 	if err != nil {
 		t.Errorf("Error writing file: %s", err)
+	}
+
+	err = os.Remove(filename + ".tmp")
+	if err != nil {
+		t.Errorf("Error removing file: %s", err)
 	}
 }
 
@@ -224,5 +228,110 @@ func TestAddLineAtIndex(t *testing.T) {
 	err = md.Write(filename + ".tmp")
 	if err != nil {
 		t.Errorf("Error writing file: %s", err)
+	}
+
+	err = os.Remove(filename + ".tmp")
+	if err != nil {
+		t.Errorf("Error removing file: %s", err)
+	}
+}
+
+func TestGetFrontMatter(t *testing.T) {
+	filename := "./testfiles/metadata.md"
+	md := New(filename)
+	err := md.Read()
+	if err != nil {
+		t.Errorf("Error reading file: %s", err)
+	}
+
+	value := md.GetFrontMatter("author", "")
+	if value != "Another Hadi" {
+		t.Errorf("Expected 'Another Hadi', got %s", value)
+	}
+
+	value = md.GetFrontMatter("tag", nil)
+	valueList, ok := value.([]interface{})
+	if !ok {
+		t.Errorf("Expected a list of strings, got %s", value)
+	}
+	if valueList[0] != "myFirstTag" {
+		t.Errorf("Expected 'myFirstTag', got %s", valueList[0])
+	}
+
+	value = md.GetFrontMatter("aRandomValue", "Empty")
+	if value != "Empty" {
+		t.Errorf("Expected 'Empty', got %s", value)
+	}
+
+	value = md.GetFrontMatter("aRandomValue", nil)
+	if value != nil {
+		t.Errorf("Expected 'nil', got %s", value)
+	}
+}
+
+func TestGetSection(t *testing.T) {
+	filename := "./testfiles/lorem.md"
+	md := New(filename)
+	err := md.Read()
+	if err != nil {
+		t.Errorf("Error reading file: %s", err)
+	}
+
+	section := md.GetSection(H2, "Etiam")
+	if section == nil {
+		t.Errorf("Expected a section, got nil")
+		return
+	}
+	section.Lines[0].Text = "New Text"
+	if md.Sections[1].Lines[0].Text != "New Text" {
+		t.Errorf("Expected 'New Text', got %s", md.Sections[1].Lines[0].Text)
+	}
+
+	section = md.GetSection(H1, "Not Found")
+	if section != nil {
+		t.Errorf("Expected nil, got a section")
+	}
+}
+
+func TestSearchSection(t *testing.T) {
+	filename := "./testfiles/lorem.md"
+	md := New(filename)
+	err := md.Read()
+	if err != nil {
+		t.Errorf("Error reading file: %s", err)
+	}
+
+	sections := md.SearchSection("Etiam")
+	if len(*sections) != 1 {
+		t.Errorf("Expected 1 section, got %d", len(*sections))
+	}
+
+	sections = md.SearchSection("Etia")
+	if len(*sections) != 1 {
+		t.Errorf("Expected 1 section, got %d", len(*sections))
+	}
+
+	sections = md.SearchSection("Etim")
+	if len(*sections) != 1 {
+		t.Errorf("Expected 1 section, got %d", len(*sections))
+	}
+	section := (*sections)[0]
+	section.Lines[0].Text = "New Text"
+	if md.Sections[1].Lines[0].Text != "New Text" {
+		t.Errorf("Expected 'New Text', got %s", md.Sections[1].Lines[0].Text)
+	}
+}
+
+func TestSearchSectionWithType(t *testing.T) {
+	filename := "./testfiles/lorem.md"
+	md := New(filename)
+	err := md.Read()
+	if err != nil {
+		t.Errorf("Error reading file: %s", err)
+	}
+
+	sections := md.SearchSectionWithType("Etiam", H2)
+	if len(*sections) != 1 {
+		t.Errorf("Expected 1 section, got %d", len(*sections))
 	}
 }

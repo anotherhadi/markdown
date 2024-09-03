@@ -70,11 +70,9 @@ func (md *MarkdownFile) Read() (err error) {
 
 		// Skip the FrontMatter
 		if line == "---" && isFirstLine {
-			md.frontMatterData = append(md.frontMatterData, line)
 			for {
 				scanner.Scan()
 				line = scanner.Text()
-				md.frontMatterData = append(md.frontMatterData, line)
 				if line == "---" {
 					scanner.Scan()
 					line = scanner.Text()
@@ -84,7 +82,6 @@ func (md *MarkdownFile) Read() (err error) {
 		}
 		if isFirstLine && line == "" {
 			isFirstLine = false
-			md.frontMatterData = append(md.frontMatterData, line)
 			continue
 		}
 		isFirstLine = false
