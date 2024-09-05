@@ -1,6 +1,7 @@
 package markdown
 
 import (
+	"os"
 	"regexp"
 	"strings"
 )
@@ -93,5 +94,9 @@ type MarkdownFile struct {
 
 // New creates a new MarkdownFile object
 func New(path string) MarkdownFile {
+	path = strings.Replace(path, "$HOME", os.Getenv("HOME"), 1)
+	path = strings.Replace(path, "${HOME}", os.Getenv("HOME"), 1)
+	path = strings.Replace(path, "$USER", os.Getenv("HOME"), 1)
+	path = strings.Replace(path, "${USER}", os.Getenv("USER"), 1)
 	return MarkdownFile{Path: path}
 }
