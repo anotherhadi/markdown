@@ -302,20 +302,20 @@ func TestSearchSection(t *testing.T) {
 	}
 
 	sections := md.SearchSection("Etiam")
-	if len(*sections) != 1 {
-		t.Errorf("Expected 1 section, got %d", len(*sections))
+	if len(sections) != 1 {
+		t.Errorf("Expected 1 section, got %d", len(sections))
 	}
 
 	sections = md.SearchSection("Etia")
-	if len(*sections) != 1 {
-		t.Errorf("Expected 1 section, got %d", len(*sections))
+	if len(sections) != 1 {
+		t.Errorf("Expected 1 section, got %d", len(sections))
 	}
 
 	sections = md.SearchSection("Etim")
-	if len(*sections) != 1 {
-		t.Errorf("Expected 1 section, got %d", len(*sections))
+	if len(sections) != 1 {
+		t.Errorf("Expected 1 section, got %d", len(sections))
 	}
-	section := (*sections)[0]
+	section := (sections)[0]
 	section.Lines[0].Text = "New Text"
 	if md.Sections[1].Lines[0].Text != "New Text" {
 		t.Errorf("Expected 'New Text', got %s", md.Sections[1].Lines[0].Text)
@@ -331,7 +331,7 @@ func TestSearchSectionWithType(t *testing.T) {
 	}
 
 	sections := md.SearchSectionWithType("Etiam", H2)
-	if len(*sections) != 1 {
-		t.Errorf("Expected 1 section, got %d", len(*sections))
+	if len(sections) != 1 {
+		t.Errorf("Expected 1 section, got %d", len(sections))
 	}
 }
