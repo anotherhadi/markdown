@@ -92,6 +92,7 @@ func (md *MarkdownFile) Read() (err error) {
 		// if the line start with #, it's a new section
 		if strings.HasPrefix(trimmedLine, "#") {
 			sectionType := getSectionType(trimmedLine)
+			trimmedLine = strings.TrimSuffix(trimmedLine, "\n")
 			if sectionType == H1 && md.Title == "" {
 				md.Title = trimmedLine[strings.Index(trimmedLine, " ")+1:]
 			}
