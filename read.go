@@ -55,6 +55,7 @@ func (md *MarkdownFile) Read() (err error) {
 
 	file, err := os.Open(filename)
 	if err != nil {
+		_ = os.Chdir(currentDir)
 		return err
 	}
 	defer file.Close()
@@ -100,7 +101,11 @@ func (md *MarkdownFile) Read() (err error) {
 			if currentSection.SectionType != NullSection || len(currentLines) > 0 {
 				md.Sections = append(md.Sections, currentSection)
 			}
-			currentSection = Section{SectionType: sectionType, Text: sectionText, originalText: line}
+			currentSection = Section{
+				SectionType:  sectionType,
+				Text:         sectionText,
+				originalText: line,
+			}
 			currentLines = []Line{}
 		} else { // Add to current section
 			lineType := getLineType(trimmedLine)
